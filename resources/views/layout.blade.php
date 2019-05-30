@@ -2,7 +2,15 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
     <title>@yield('title')</title>
+    <script src="{{ secure_asset('js/app.js') }}" defer></script>
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+    <link href="{{ secure_asset('css/app.css') }}" rel="stylesheet">
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -19,9 +27,28 @@
     margin-top:100px;
     }
     
+    .mapview {
+    margin: 30px 0 30px 0;
+    }
+    
+    .imgview {
+    margin: 15px;
+    }
+
+    .map{
+        height: 400px;
+        margin-bottom: 20px;
+    }
+
+    #map {
+    height: 50%;
+    width: 50%;
+    }
+    
     </style>
 </head>
 <body>
+
     @yield('content')
 </body>
 </html>
