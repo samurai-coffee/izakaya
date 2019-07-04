@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Storage;
 use App\Shop;
+use App\Contact;
 use Validator;
+use App\Http\Requests\ContactRequest;
 
 class HomeController extends Controller
 {
@@ -97,6 +99,7 @@ class HomeController extends Controller
             'name'  => 'required|max:20',
             'message' => 'required|max:255',
             'address' => 'required|max:255',
+            'email'  => 'required|max:255',
             'tel'  => 'required|max:20',
         ]);
  
@@ -114,6 +117,7 @@ class HomeController extends Controller
         $shop->name = $request->name;
         $shop->message = $request->message;
         $shop->address = $request->address;
+        $shop->email = $request->email;
         $shop->tel = $request->tel;
         $shop->category = $request->category;
         $shop->lat = $request->lat;
@@ -186,4 +190,59 @@ class HomeController extends Controller
         }
     }
     
+    public function contact($id)
+    {
+    	$shop = Shop::find($id);
+    	$shop_id = $shop->id;
+    	$user = User::find(auth()->id());
+    	$user_id = $user->id;
+        return view('contacts.index', compact('shop_id','user_id'));
+    }
+    public function contactConfirm(ContactRequest $request)
+    {
+        $contact = new Contact($request->all());
+        return view('contacts.confirm', compact('contact'));
+    }
+    
+    public function contactComplete(ContactRequest $request)
+{
+    $input = $request->except('action');
+
+    if ($request->action === '戻る') {
+        return redirect("/contact/".$request->shop_id);
+    }
+
+    // データを保存
+    Contact::create($request->all());
+
+    // 二重送信防止
+    $request->session()->regenerateToken();
+
+    $user = User::find($request->user_id);
+    $shop = Shop::find($request->shop_id);
+    
+    // 送信メール
+    \Mail::send(new \App\Mail\Contact([
+        'to' => $user->email,
+        'to_name' => $user->name,
+        'from' => $shop->email,
+        'from_name' => $shop->name,
+        'subject' => '予約ありがとうございました。',
+        'reserve_at' => $request->reserve_at,
+        'time' => $request->time
+    ]));
+    
+    // 受信メール
+    \Mail::send(new \App\Mail\Contact([
+        'to' => $shop->email,
+        'to_name' => $shop->name,
+        'from' => $user->email,
+        'from_name' => $user->name,
+        'subject' => 'サイトからの予約',
+        'reserve_at' => $request->reserve_at,
+        'time' => $request->time
+    ], 'from'));
+
+    return view('contacts.complete');
+}
 }

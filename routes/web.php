@@ -29,3 +29,7 @@ Route::post('/shop_image_upload', 'HomeController@uploadShopImage');
 Route::get('/shop_detail/{id}','HomeController@getShopDetail')->name('/shop_detail');
 
 Route::get('/category/{word}','PageController@getCategory');
+
+Route::get('/contact/{id}', 'HomeController@contact');
+Route::post('/confirm', 'HomeController@contactConfirm');
+Route::post('/complete', 'HomeController@contactComplete');

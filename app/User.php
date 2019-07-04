@@ -42,4 +42,7 @@ class User extends Authenticatable
     public function reservesToUser() {
       return $this->hasMany('App\Reserve','user_id');
     }
+    public function contactsToUser() {
+      return $this->hasMany('App\Contact','user_id');
+    }
 }

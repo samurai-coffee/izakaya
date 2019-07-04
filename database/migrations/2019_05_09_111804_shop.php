@@ -18,6 +18,7 @@ class Shop extends Migration
             $table->longText('message'); 
             $table->string('address'); 
             $table->string('tel');
+            $table->string('email');
             $table->string('category');
             $table->text('photo_path'); 
             $table->unsignedBigInteger('user_id'); 

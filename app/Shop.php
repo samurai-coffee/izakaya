@@ -13,4 +13,7 @@ class Shop extends Model
      public function reservesToShop() {
       return $this->hasMany('App\Reserve','shop_id');
     }
+    public function contactsToShop() {
+      return $this->hasMany('App\Contact','shop_id');
+    }
 }
